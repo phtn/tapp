@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { FaWallet } from "react-icons/fa";
+// import { FaWallet } from "react-icons/fa";
 
 // @ts-ignore
 // import TronGrid from "trongrid";
@@ -13,12 +13,7 @@ import {
   Box,
   VStack,
   Grid,
-  Button,
   HStack,
-  Badge,
-  Stat,
-  StatNumber,
-  StatHelpText,
 } from "@chakra-ui/core";
 
 // Components
@@ -53,9 +48,13 @@ export const App = () => {
   const getTRX = useCallback(
     async (address: string) => {
       if (address !== "") {
+        // console.log(tronWeb.trx);
         const assets = await tronWeb.trx
           .getAccount(address)
+          // .then((res: any) => res);
           .then((result: IAsset) => setBalance(result.balance * 0.000001));
+
+        // console.log(assets);
         return assets;
       }
     },
@@ -88,7 +87,7 @@ export const App = () => {
             setTron(window.tronWeb.defaultAddress);
             // setBase58(tron.base58);
           } else {
-            setWallet("You must login to your Tronlink Chrome Extension");
+            setWallet("Not Connected");
           }
         }
 
@@ -102,40 +101,24 @@ export const App = () => {
     setBase58(tron.base58);
     // getAssets("TT48X5wLJ14P4qu3KF24Fjw72wwyPmWtVJ");
     getTRX(tron.base58);
+
+    // if (base58 !== "") {
+    //   console.log(tronWeb.trx.getAccount(base58));
+    // }
+    // console.log(balance);
   }, [tron.base58, getTRX]);
 
   return (
     <ChakraProvider theme={theme}>
       <CSSReset />
-      <Navbar walletName={wallet} />
+      <Navbar walletName={wallet} loggedIn={loggedIn} walletAddress={base58} />
       <Container maxW="x1">
         <Box textAlign="center" fontSize="xl">
           <HStack p={5}>
-            <Button
-              justifySelf="flex-end"
-              leftIcon={<FaWallet />}
-              variant="outline"
-              colorScheme="blue"
-            >
-              {loggedIn ? (
-                <p>
-                  {base58.substr(0, 4) +
-                    " ··· " +
-                    base58.substr(base58.length - 4)}
-                </p>
-              ) : (
-                <p>not logged in</p>
-              )}
-            </Button>
-
-            <Stat>
-              <StatNumber>{balance + " TRX"}</StatNumber>
-              <StatHelpText>AVAILABLE BALANCE</StatHelpText>
-            </Stat>
-
-            <Badge>ok</Badge>
             <ColorModeSwitcher justifySelf="flex-end" />
           </HStack>
+
+          <Box>{balance}</Box>
 
           <Grid minH="100vh" p={4}>
             <VStack spacing={10}>
