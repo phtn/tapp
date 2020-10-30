@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 // import { FaWallet } from "react-icons/fa";
 
 // @ts-ignore
-// import TronGrid from "trongrid";
+import TronGrid from "trongrid";
 // @ts-ignore
 import TronWeb from "tronweb";
 
@@ -14,6 +14,7 @@ import {
   VStack,
   Grid,
   HStack,
+  SimpleGrid,
 } from "@chakra-ui/core";
 
 // Components
@@ -22,6 +23,7 @@ import Navbar from "./components/navbar";
 import theme from "@chakra-ui/theme";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Logo } from "./Logo";
+import Body from "./components/body";
 
 declare global {
   interface Window {
@@ -41,24 +43,37 @@ interface IAsset {
 }
 
 export const App = () => {
-  const tronWeb = new TronWeb({
-    fullHost: "https://api.trongrid.io",
-  });
+  const HttpProvider = TronWeb.providers.HttpProvider;
+  const fullNode = new HttpProvider("https://api.trongrid.io");
+  const solidityNode = new HttpProvider("https://api.trongrid.io");
+  const eventServer = new HttpProvider("https://api.trongrid.io");
+  const tronWeb = new TronWeb(fullNode, solidityNode, eventServer);
+
+  const tronGrid = new TronGrid(tronWeb);
   // Get TRX Assets
   const getTRX = useCallback(
-    async (address: string) => {
-      if (address !== "") {
-        // console.log(tronWeb.trx);
-        const assets = await tronWeb.trx
-          .getAccount(address)
-          // .then((res: any) => res);
-          .then((result: IAsset) => setBalance(result.balance * 0.000001));
+    // async (address: string) => {
+    //   if (address !== "") {
+    //     // console.log(tronWeb.trx);
+    //     const assets = await tronWeb.trx
+    //       .getAccount(address)
+    //       // .then((res: any) => res);
+    //       .then((result: IAsset) => setBalance(result.balance * 0.000001));
 
-        // console.log(assets);
-        return assets;
+    //     // console.log(assets);
+    //     return assets;
+    //   }
+    // },
+
+    function (address: string) {
+      if (address !== "") {
+        console.log(address);
+        tronGrid.account.get(address, (options: any) => {
+          console.log(options);
+        });
       }
     },
-    [tronWeb.trx]
+    [tronGrid.asset]
   );
 
   const [tron, setTron] = useState<IDefaultAddress>({
@@ -76,6 +91,7 @@ export const App = () => {
     window.addEventListener("load", () => {
       let tronlink = setInterval(async () => {
         if (!!window.tronWeb) {
+          clearInterval(tronlink);
           console.log("tronWeb is installed");
           const ready = await window.tronWeb.defaultAddress.hex;
           console.log(ready ? "logged in" : "not logged in");
@@ -85,14 +101,12 @@ export const App = () => {
             const walletName = window.tronWeb.defaultAddress.name;
             setWallet(walletName);
             setTron(window.tronWeb.defaultAddress);
-            // setBase58(tron.base58);
+            // getTRX(tron.base58);
           } else {
             setWallet("Not Connected");
           }
         }
-
-        clearInterval(tronlink);
-      }, 3);
+      }, 500);
     });
   }
 
@@ -113,19 +127,7 @@ export const App = () => {
       <CSSReset />
       <Navbar walletName={wallet} loggedIn={loggedIn} walletAddress={base58} />
       <Container maxW="x1">
-        <Box textAlign="center" fontSize="xl">
-          <HStack p={5}>
-            <ColorModeSwitcher justifySelf="flex-end" />
-          </HStack>
-
-          <Box>{balance}</Box>
-
-          <Grid minH="100vh" p={4}>
-            <VStack spacing={10}>
-              <Logo h="50vmin" pointerEvents="none" />
-            </VStack>
-          </Grid>
-        </Box>
+        <Body height={window.innerHeight} />
       </Container>
     </ChakraProvider>
   );
