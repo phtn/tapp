@@ -6,16 +6,7 @@ import TronGrid from "trongrid";
 // @ts-ignore
 import TronWeb from "tronweb";
 
-import {
-  ChakraProvider,
-  CSSReset,
-  Container,
-  Box,
-  VStack,
-  Grid,
-  HStack,
-  SimpleGrid,
-} from "@chakra-ui/core";
+import { ChakraProvider, CSSReset, Container } from "@chakra-ui/core";
 
 // Components
 import Navbar from "./components/navbar";
@@ -65,12 +56,21 @@ export const App = () => {
     //   }
     // },
 
-    function (address: string) {
+    async function (address: string) {
       if (address !== "") {
-        console.log(address);
-        tronGrid.account.get(address, (options: any) => {
-          console.log(options);
-        });
+        const addr = address;
+
+        const options = {
+          showAssets: true,
+          onlyConfirmed: true,
+        };
+
+        const account = await tronGrid.account.get(addr, options);
+        const data = await account.data;
+        const [resource] = data;
+        const balance = resource.balance;
+        setBalance(balance);
+        console.log(balance);
       }
     },
     [tronGrid.asset]
@@ -92,7 +92,7 @@ export const App = () => {
       let tronlink = setInterval(async () => {
         if (!!window.tronWeb) {
           clearInterval(tronlink);
-          console.log("tronWeb is installed");
+          console.log("Tronlink is installed");
           const ready = await window.tronWeb.defaultAddress.hex;
           console.log(ready ? "logged in" : "not logged in");
 
@@ -105,6 +105,8 @@ export const App = () => {
           } else {
             setWallet("Not Connected");
           }
+        } else {
+          console.log("Tronlink not installed");
         }
       }, 500);
     });
@@ -114,7 +116,11 @@ export const App = () => {
     gettronweb();
     setBase58(tron.base58);
     // getAssets("TT48X5wLJ14P4qu3KF24Fjw72wwyPmWtVJ");
-    getTRX(tron.base58);
+    try {
+      getTRX(tron.base58);
+    } catch (err) {
+      console.log(err.message);
+    }
 
     // if (base58 !== "") {
     //   console.log(tronWeb.trx.getAccount(base58));
@@ -127,7 +133,7 @@ export const App = () => {
       <CSSReset />
       <Navbar walletName={wallet} loggedIn={loggedIn} walletAddress={base58} />
       <Container maxW="x1">
-        <Body height={window.innerHeight} />
+        <Body height={window.innerHeight} balance={balance} />
       </Container>
     </ChakraProvider>
   );

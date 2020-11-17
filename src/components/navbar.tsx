@@ -39,7 +39,7 @@ const Navbar = (props: NavbarProps) => {
   const { loggedIn, walletName, walletAddress } = props;
   return (
     <Flex borderBottom={"2px solid rgba(0,0,0,0.2)"}>
-      <Box padding="4" bg="rgba(0,0,0,0.1)" flex={1} h={75} style={styles.nav}>
+      <Box padding="4" bg="rgba(0,0,0,0.1)" flex={1} style={styles.nav}>
         <HStack>
           <Flex align="center" justify="center">
             <Menu>
@@ -63,8 +63,14 @@ const Navbar = (props: NavbarProps) => {
               </MenuButton>
               <MenuList>
                 <MenuGroup title="Assets">
-                  <MenuItem>TRX = $ 6,753.90</MenuItem>
-                  <MenuItem>SUN </MenuItem>
+                  <MenuItem style={styles.menuItem}>
+                    <span style={styles.assetName}>TRX</span> ≈{" "}
+                    <b style={styles.tronValue}>
+                      270,156<span style={styles.tronDecimals}>.9834</span>
+                    </b>
+                    <b style={styles.dollar}>$</b> 6,753.90
+                  </MenuItem>
+                  <MenuItem style={styles.assetName}>SUN </MenuItem>
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup title="Strength">
@@ -108,7 +114,6 @@ const Navbar = (props: NavbarProps) => {
               _hover={{ bg: "rgba(0,0,0,0.7)" }}
               _expanded={{ bg: "green.500" }}
               color={"#0085ad"}
-              // marginRight={20}
             >
               {loggedIn
                 ? walletAddress.substr(0, 4) +
@@ -144,6 +149,25 @@ const styles = {
   logoDesc: {
     fontSize: 9,
     marginTop: "-10px",
+  },
+  menuItem: {
+    height: 20,
+    fontSize: 10,
+  },
+  assetName: {
+    marginRight: 10,
+    color: "#fd5c63",
+    fontWeight: 700,
+  },
+  dollar: {
+    marginRight: 3,
+    marginLeft: 10,
+  },
+  tronValue: {
+    marginLeft: 10,
+  },
+  tronDecimals: {
+    color: "rgba(0,0,0,0.45)",
   },
 };
 
