@@ -1,19 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Grid,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuGroup,
-  MenuItem,
-  MenuList,
-  SimpleGrid,
-  Box,
-  HStack,
-  VStack,
-} from "@chakra-ui/core";
-import { FaLink } from "react-icons/fa";
+import { SimpleGrid, Box, HStack } from "@chakra-ui/core";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 
 type BodyProps = {

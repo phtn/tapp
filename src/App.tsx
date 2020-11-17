@@ -12,8 +12,6 @@ import { ChakraProvider, CSSReset, Container } from "@chakra-ui/core";
 import Navbar from "./components/navbar";
 
 import theme from "@chakra-ui/theme";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
-import { Logo } from "./Logo";
 import Body from "./components/body";
 
 declare global {
@@ -73,7 +71,7 @@ export const App = () => {
         console.log(balance);
       }
     },
-    [tronGrid.asset]
+    [tronGrid.account]
   );
 
   const [tron, setTron] = useState<IDefaultAddress>({

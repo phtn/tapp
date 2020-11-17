@@ -14,20 +14,7 @@ import {
   MenuDivider,
   MenuItem,
 } from "@chakra-ui/core";
-import {
-  FaWallet,
-  FaUnlink,
-  FaRegCopy,
-  FaLink,
-  FaRegDotCircle,
-  FaCheck,
-  FaDizzy,
-  FaHandsHelping,
-  FaSeedling,
-  FaDragon,
-  FaAtom,
-  FaUserShield,
-} from "react-icons/fa";
+import { FaWallet, FaUnlink, FaLink, FaDizzy } from "react-icons/fa";
 
 type NavbarProps = {
   loggedIn: boolean;
