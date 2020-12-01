@@ -4,7 +4,6 @@ import {
   Box,
   HStack,
   Badge,
-  Button,
   VStack,
   Text,
   Menu,
@@ -15,18 +14,21 @@ import {
   MenuItem,
   Avatar,
   IconButton,
+  Link,
 } from "@chakra-ui/core";
-import { FaWallet, FaUnlink, FaLink, FaDizzy } from "react-icons/fa";
+import { FaWallet, FaUnlink, FaLink } from "react-icons/fa";
+import { ColorModeSwitcher } from "../ColorModeSwitcher";
 
 type NavbarProps = {
   loggedIn: boolean;
   walletName: string;
   walletAddress: string;
   balance: number;
+  trc20: number;
 };
 
 const Navbar = (props: NavbarProps) => {
-  const { loggedIn, walletName, walletAddress, balance } = props;
+  const { loggedIn, walletName, walletAddress, balance, trc20 } = props;
   return (
     <Flex borderBottom={"2px solid rgba(0,0,0,0.2)"}>
       <Box padding="4" bg="rgba(0,0,0,0.1)" flex={1} style={styles.nav}>
@@ -35,16 +37,23 @@ const Navbar = (props: NavbarProps) => {
           <Flex flex={1} justifyContent="left">
             <VStack>
               <Badge ml="2" fontSize="1em" color="black" style={styles.logo}>
-                cartesian
+                <Link style={styles.title} href="/">
+                  cartesian
+                </Link>
               </Badge>
             </VStack>
           </Flex>
+
+          <Flex>
+            <ColorModeSwitcher color="red" justifySelf="flex-end" />
+          </Flex>
+
           {/* SECOND */}
           <Flex align="center" justify="center">
             <Menu>
               <MenuButton
                 // minW={loggedIn ? "75px" : 0}
-                minW={50}
+                // minW={50}
                 as={IconButton}
                 backgroundColor="rgba(0,0,0,0.2)"
                 isLoading={!loggedIn}
@@ -75,12 +84,27 @@ const Navbar = (props: NavbarProps) => {
                     <Avatar size="sm" name="TRX" src="" />
                     <Text style={styles.balance}>{balance * 0.000001}</Text>
                   </MenuItem>
-                  <MenuItem style={styles.assetName}>SUN </MenuItem>
+                  <MenuItem style={styles.menuItem}>
+                    <Avatar size="sm" name="SUN" src="" colorScheme="yellow" />
+                    <Text style={styles.balance}>
+                      {(trc20 * 0.000000000000000001).toFixed(7)}
+                    </Text>
+                  </MenuItem>
                 </MenuGroup>
                 <MenuDivider />
-                <MenuGroup title="Strength">
-                  <MenuItem>Bandwidth</MenuItem>
-                  <MenuItem>Energy</MenuItem>
+                <MenuGroup
+                  title={
+                    walletAddress.substr(0, 4) +
+                    " · · · " +
+                    walletAddress.substr(walletAddress.length - 4)
+                  }
+                >
+                  <MenuItem>
+                    <Avatar name="B W" />
+                  </MenuItem>
+                  <MenuItem>
+                    <Avatar name="E N" />
+                  </MenuItem>
                 </MenuGroup>
               </MenuList>
             </Menu>
@@ -116,7 +140,7 @@ const Navbar = (props: NavbarProps) => {
               _expanded={{ bg: "green.500" }}
               color={"#0085ad"}
               aria-label="Tron"
-              icon={loggedIn ? <FaLink /> : <FaDizzy color={"#fd5c63"} />}
+              icon={loggedIn ? <FaLink /> : <FaUnlink color={"#fd5c63"} />}
             />
           </Flex>
         </HStack>
@@ -143,6 +167,9 @@ const styles = {
   logoDesc: {
     fontSize: 9,
     marginTop: "-10px",
+  },
+  title: {
+    textDecoration: "none",
   },
   menuItem: {
     // height: 20,

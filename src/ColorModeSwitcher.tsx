@@ -22,7 +22,9 @@ export const ColorModeSwitcher = (props: ColorModeSwitcherProps) => {
       color="current"
       marginLeft="2"
       onClick={toggleColorMode}
-      icon={<SwitchIcon />}
+      icon={<SwitchIcon color="teal" />}
+      backgroundColor="rgba(0,0,0,0.2)"
+      _hover={{ bg: "rgba(0,0,0,0.7)" }}
       aria-label={`Switch to ${text} mode`}
       {...props}
     />

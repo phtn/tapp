@@ -60,6 +60,7 @@ export const App = () => {
         const key = Object.keys(sunAddress);
         console.log("key: " + key);
         console.log(sunAddress[key] * 0.000000000000000001);
+        setTrc20(sunAddress[key]);
         console.log(balance);
       }
     },
@@ -127,9 +128,14 @@ export const App = () => {
         loggedIn={loggedIn}
         walletAddress={base58}
         balance={balance}
+        trc20={trc20}
       />
       <Container maxW="x1">
-        <Body height={window.innerHeight} balance={balance} />
+        <Body
+          loggedIn={loggedIn}
+          height={window.innerHeight}
+          balance={balance}
+        />
       </Container>
     </ChakraProvider>
   );
