@@ -41,19 +41,6 @@ export const App = () => {
   const tronGrid = new TronGrid(tronWeb);
   // Get TRX Assets
   const getTRX = useCallback(
-    // async (address: string) => {
-    //   if (address !== "") {
-    //     // console.log(tronWeb.trx);
-    //     const assets = await tronWeb.trx
-    //       .getAccount(address)
-    //       // .then((res: any) => res);
-    //       .then((result: IAsset) => setBalance(result.balance * 0.000001));
-
-    //     // console.log(assets);
-    //     return assets;
-    //   }
-    // },
-
     async function (address: string) {
       if (address !== "") {
         const addr = address;
@@ -67,7 +54,12 @@ export const App = () => {
         const data = await account.data;
         const [resource] = data;
         const balance = resource.balance;
+        const trc20 = resource.trc20;
         setBalance(balance);
+        const [sunAddress] = trc20;
+        const key = Object.keys(sunAddress);
+        console.log("key: " + key);
+        console.log(sunAddress[key] * 0.000000000000000001);
         console.log(balance);
       }
     },
@@ -84,6 +76,7 @@ export const App = () => {
   const [base58, setBase58] = useState("address");
   const [loggedIn, setLoggedIn] = useState(false);
   const [balance, setBalance] = useState(0);
+  const [trc20, setTrc20] = useState(0);
 
   function gettronweb() {
     window.addEventListener("load", () => {
@@ -101,7 +94,7 @@ export const App = () => {
             setTron(window.tronWeb.defaultAddress);
             // getTRX(tron.base58);
           } else {
-            setWallet("Not Connected");
+            setWallet("");
           }
         } else {
           console.log("Tronlink not installed");
@@ -129,7 +122,12 @@ export const App = () => {
   return (
     <ChakraProvider theme={theme}>
       <CSSReset />
-      <Navbar walletName={wallet} loggedIn={loggedIn} walletAddress={base58} />
+      <Navbar
+        walletName={wallet}
+        loggedIn={loggedIn}
+        walletAddress={base58}
+        balance={balance}
+      />
       <Container maxW="x1">
         <Body height={window.innerHeight} balance={balance} />
       </Container>

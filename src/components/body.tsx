@@ -8,18 +8,19 @@ type BodyProps = {
 };
 const Body = (props: BodyProps) => {
   const { height, balance } = props;
+  const computedBalance = balance * 0.000001;
   return (
     <SimpleGrid minChildWidth="120px" spacing="0px">
-      <Box
+      {/* <Box
         bg="rgba(0,0,0,0.0)"
         borderRight={"2px solid rgba(0,0,0,0.2)"}
         height={height - 75}
         w={"40%"}
-      ></Box>
+      ></Box> */}
       <Box bg="blue" height="80px">
         <Box textAlign="center" fontSize="xl">
           <HStack p={5}>
-            <p>{balance}</p>
+            <p>{computedBalance.toFixed(6)} TRX</p>
             <ColorModeSwitcher justifySelf="flex-end" />
           </HStack>
         </Box>
