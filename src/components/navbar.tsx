@@ -35,7 +35,7 @@ const Navbar = (props: NavbarProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setSpin(true);
-    }, 1000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
