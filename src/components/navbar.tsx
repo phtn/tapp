@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Flex,
   Box,
@@ -17,6 +17,7 @@ import {
   Link,
 } from "@chakra-ui/core";
 import { FaWallet, FaUnlink, FaLink } from "react-icons/fa";
+import { BiLogInCircle } from "react-icons/bi";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 
 type NavbarProps = {
@@ -29,6 +30,15 @@ type NavbarProps = {
 
 const Navbar = (props: NavbarProps) => {
   const { loggedIn, walletName, walletAddress, balance, trc20 } = props;
+
+  const [spin, setSpin] = useState(loggedIn);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSpin(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Flex borderBottom={"2px solid rgba(0,0,0,0.2)"}>
       <Box padding="4" bg="rgba(0,0,0,0.1)" flex={1} style={styles.nav}>
@@ -56,12 +66,16 @@ const Navbar = (props: NavbarProps) => {
                 // minW={50}
                 as={IconButton}
                 backgroundColor="rgba(0,0,0,0.2)"
-                isLoading={!loggedIn}
+                //
+
+                isLoading={loggedIn ? !spin : spin}
+                //
+
                 icon={
-                  loggedIn ? (
+                  spin ? (
                     <FaWallet color="teal" />
                   ) : (
-                    <FaUnlink color="#fd5c63" />
+                    <BiLogInCircle color="#fd5c63" />
                   )
                 }
                 disabled={loggedIn ? false : true}
@@ -81,7 +95,11 @@ const Navbar = (props: NavbarProps) => {
               <MenuList>
                 <MenuGroup title={walletName.toUpperCase()}>
                   <MenuItem style={styles.menuItem}>
-                    <Avatar size="sm" name="TRX" src="" />
+                    <Avatar
+                      size="sm"
+                      name="TRX"
+                      src="https://bit.ly/tron_logo"
+                    />
                     <Text style={styles.balance}>{balance * 0.000001}</Text>
                   </MenuItem>
                   <MenuItem style={styles.menuItem}>

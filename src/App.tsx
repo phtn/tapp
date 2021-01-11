@@ -13,10 +13,18 @@ import Navbar from "./components/navbar";
 
 import theme from "@chakra-ui/theme";
 import Body from "./components/body";
+import Footer from "./components/footer";
 
 declare global {
   interface Window {
     tronWeb: any;
+    userAgent: any;
+  }
+}
+
+declare global {
+  interface Navigator {
+    userAgent: any;
   }
 }
 
@@ -78,15 +86,19 @@ export const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [balance, setBalance] = useState(0);
   const [trc20, setTrc20] = useState(0);
+  const [installed, setInstalled] = useState(false);
+  const [userAgent] = useState(window.navigator.userAgent);
 
   function gettronweb() {
     window.addEventListener("load", () => {
-      let tronlink = setInterval(async () => {
+      let tronlinkInterval = setInterval(async () => {
         if (!!window.tronWeb) {
-          clearInterval(tronlink);
+          setInstalled(true);
+          clearInterval(tronlinkInterval);
           console.log("Tronlink is installed");
           const ready = await window.tronWeb.defaultAddress.hex;
           console.log(ready ? "logged in" : "not logged in");
+          console.log(userAgent);
 
           if (ready) {
             setLoggedIn(true);
@@ -118,7 +130,7 @@ export const App = () => {
     //   console.log(tronWeb.trx.getAccount(base58));
     // }
     // console.log(balance);
-  }, [tron.base58, getTRX]);
+  }, [tron.base58, getTRX, gettronweb]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -132,10 +144,14 @@ export const App = () => {
       />
       <Container maxW="x1">
         <Body
+          installed={installed}
           loggedIn={loggedIn}
-          height={window.innerHeight}
+          height={window.innerHeight - 200}
           balance={balance}
         />
+      </Container>
+      <Container>
+        <Footer />
       </Container>
     </ChakraProvider>
   );
